@@ -4,7 +4,7 @@
   "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc-watch --onSuccess \"nodemon dist/app.js\""
+    "start": "tsc-watch --onSuccess \"nodemon dist/app.js --ignore data.json\""
   },
   "author": "",
   "license": "ISC",
@@ -13,5 +13,8 @@
     "express": "^4.21.1",
     "nodemon": "^3.1.7",
     "tsc-watch": "^6.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0"
   }
 }
