@@ -60,4 +60,40 @@ router.post("/add", (req:Request, res:Response) => {
     })
 })
 
+router.get("/todos/:id", (req:Request, res:Response) => {
+
+    const reqName = req.params.id
+
+    let todoData: TUser[] = [];
+    let userTodos: String[];
+
+    fs.readFile("data.json", "utf8", (error: NodeJS.ErrnoException | null, data: string) => {
+        if (error) {
+            console.error(error)
+            res.json({"msg":"read file error"})
+            return
+        }
+
+        try {
+            if (data.trim()){
+                todoData = JSON.parse(data)
+            }
+        } catch (parseError: any) {
+            console.error(`Json parse error ${parseError}`)
+            res.json({"msg":"json parse error"})
+            return
+        }
+
+        const existingUser = todoData.find(user => user.name === reqName)
+
+        if (existingUser) {
+            userTodos = existingUser.todos
+            res.json(userTodos)
+        } else {
+            res.json("User not found")
+        }
+
+    })
+})
+
 export default router
