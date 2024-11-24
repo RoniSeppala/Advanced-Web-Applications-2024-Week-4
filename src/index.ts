@@ -1,5 +1,6 @@
 import {Router, Request, Response} from "express"
 import fs from "fs"
+import path from "path"
 
 const router: Router = Router()
 
@@ -8,6 +9,15 @@ type TUser = {
     todos: string[]
 }
 
+//check if data.json exists and if not, then create it
+const dataJsonFilepath = path.join(__dirname, '../../data.json')
+
+if (!fs.existsSync(dataJsonFilepath)){
+    fs.writeFileSync(dataJsonFilepath, "", "utf8")
+}
+
+
+//hello world
 router.get("/hello", (req:Request, res:Response) => {
     res.json({"msg":"hello world"})
 })
