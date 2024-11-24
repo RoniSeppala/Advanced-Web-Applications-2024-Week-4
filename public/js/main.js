@@ -1,4 +1,5 @@
 const form = document.getElementById("todoForm")
+const output = document.getElementById("output")
 
 form.addEventListener("submit", (event) => {
     event.preventDefault()
@@ -18,5 +19,11 @@ form.addEventListener("submit", (event) => {
             "Content-type": "application/json"
         },
         body: JSON.stringify(data)
-    }).then((response) => response.json()).then((data) => console.log(data))
+    }).then((response) => response.json()).then((data) => {
+        console.log(data)
+        output.innerText = ""
+        const outputPElement = document.createElement("p")
+        outputPElement.textContent = data
+        output.appendChild(outputPElement)
+    })
 })
