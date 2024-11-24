@@ -55,7 +55,7 @@ router.post("/add", (req:Request, res:Response) => {
                 res.json({"msg":"file write error"})
                 return
             }
-            res.json(`Todo added succesfully to user ${reqName}`)
+            res.json(`/Todo added succesfully to user ${reqName}/i`)
         })
     })
 })
