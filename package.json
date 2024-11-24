@@ -13,5 +13,8 @@
     "express": "^4.21.1",
     "nodemon": "^3.1.7",
     "tsc-watch": "^6.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0"
   }
 }
