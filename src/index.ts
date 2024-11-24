@@ -26,7 +26,7 @@ router.post("/add", (req:Request, res:Response) => {
         }
 
         try {
-            if (data){
+            if (data.trim()){
                 todoData = JSON.parse(data)
             }
         } catch (parseError: any) {
