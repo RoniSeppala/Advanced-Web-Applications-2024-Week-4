@@ -130,9 +130,7 @@ router.delete("/delete", (req:Request, res: Response) => {
         }
 
         newTodoData = todoData.filter(user => user.name !== reqName)
-        console.log(newTodoData)
-        console.log(todoData)
-        console.log(JSON.stringify(newTodoData) != JSON.stringify(todoData))
+
         if (JSON.stringify(newTodoData) != JSON.stringify(todoData)) {
             fs.writeFile("data.json", JSON.stringify(newTodoData), (error: NodeJS.ErrnoException | null) => {
                 if (error){
@@ -145,6 +143,57 @@ router.delete("/delete", (req:Request, res: Response) => {
         } else {
             res.json(`User not found`)
         }
+    })
+})
+
+router.put("/update", (req:Request, res:Response) => {
+    console.log(req.body)
+    const reqName = req.body.name
+    const reqDeleteTodo = req.body.todo
+
+    let todoData: TUser[] = [];
+
+    fs.readFile("data.json", "utf8", (error: NodeJS.ErrnoException | null, data: string) => {
+        if (error) {
+            console.error(error)
+            res.json({"msg":"read file error"})
+            return
+        }
+
+        try {
+            if (data.trim()){
+                todoData = JSON.parse(data)
+            }
+        } catch (parseError: any) {
+            console.error(`Json parse error ${parseError}`)
+            res.json({"msg":"json parse error"})
+            return
+        }
+
+        const existingUser = todoData.find(user => user.name === reqName)
+
+        if (existingUser) {
+            for (let index = 0; index < existingUser.todos.length; index++) {
+                const element = existingUser.todos[index];
+                if (element == reqDeleteTodo) {
+                    existingUser.todos.splice(index, 1)
+                    break
+                }
+            }
+        } else {
+            console.log("todo not found")
+            res.json({"msg":"todo not found"})
+            return
+        }
+
+        fs.writeFile("data.json", JSON.stringify(todoData), (error: NodeJS.ErrnoException | null) => {
+            if (error){
+                console.error(error)
+                res.json({"msg":"file write error"})
+                return
+            }
+            res.json(`Todo deleted successfully`)
+        })
     })
 })
 
