@@ -106,4 +106,46 @@ router.get("/todos/:id", (req:Request, res:Response) => {
     })
 })
 
+router.delete("/delete", (req:Request, res: Response) => {
+    const reqName = req.body.name
+
+    let todoData: TUser[] = [];
+    let newTodoData: TUser[] = [];
+
+    fs.readFile("data.json", "utf8", (error: NodeJS.ErrnoException | null, data: string) => {
+        if (error) {
+            console.error(error)
+            res.json({"msg":"read file error"})
+            return
+        }
+
+        try {
+            if (data.trim()){
+                todoData = JSON.parse(data)
+            }
+        } catch (parseError: any) {
+            console.error(`Json parse error ${parseError}`)
+            res.json({"msg":"json parse error"})
+            return
+        }
+
+        newTodoData = todoData.filter(user => user.name !== reqName)
+        console.log(newTodoData)
+        console.log(todoData)
+        console.log(JSON.stringify(newTodoData) != JSON.stringify(todoData))
+        if (JSON.stringify(newTodoData) != JSON.stringify(todoData)) {
+            fs.writeFile("data.json", JSON.stringify(newTodoData), (error: NodeJS.ErrnoException | null) => {
+                if (error){
+                    console.error(error)
+                    res.json({"msg":"file write error"})
+                    return
+                }
+                res.json(`User deleted successfully`)
+            })
+        } else {
+            res.json(`User not found`)
+        }
+    })
+})
+
 export default router

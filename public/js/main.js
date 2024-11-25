@@ -2,6 +2,26 @@ const form = document.getElementById("todoForm")
 const searchForm = document.getElementById("searchForm")
 const output = document.getElementById("output")
 const searchOutput = document.getElementById("todoOutput")
+const userDeleteButtonDiv = document.getElementById("userDeleteButtonField")
+
+function userDeleteButtonFunction(userName) {
+    fetch("http://localhost:3000/delete", {
+        method: "delete",
+        headers: {
+            "Content-type": "application/json"
+        },
+        body: JSON.stringify({"name": userName})
+    }).then((response) => response.json()).then((data) => {
+        console.log(data)
+        const userDeletionInfo = document.createElement("p")
+        userDeletionInfo.innerText = data
+        if (data == "User deleted successfully") {
+            searchOutput.innerText = ""
+        }
+
+        userDeleteButtonDiv.appendChild(userDeletionInfo)
+    })
+}
 
 form.addEventListener("submit", (event) => {
     event.preventDefault()
@@ -48,6 +68,14 @@ searchForm.addEventListener("submit", (event) => {
                 const newListElement = document.createElement("li")
                 newListElement.innerText = element
                 searchOutput.appendChild(newListElement)
+
+                userDeleteButtonDiv.innerText = ""
+                const userDeleteButton =  document.createElement("button")
+                userDeleteButton.id = "deleteUser"
+                userDeleteButton.innerText = `Delete ${searchedUser}`
+                userDeleteButton.onclick = () => userDeleteButtonFunction(searchedUser)
+
+                userDeleteButtonDiv.appendChild(userDeleteButton)
             }
         }
     })
